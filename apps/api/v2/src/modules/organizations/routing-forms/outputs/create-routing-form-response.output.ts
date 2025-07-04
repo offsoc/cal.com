@@ -81,11 +81,10 @@ export class CreateRoutingFormResponseOutputData {
   eventTypeId?: number;
 
   @ValidateNested()
-  @ApiProperty({ type: Routing })
   @Type(() => Routing)
   @ApiPropertyOptional({
     type: Routing,
-    description: "The routing information.",
+    description: "The routing information that could be passed as is to the booking API.",
     example: {
       eventTypeId: 123,
       routing: {
@@ -95,8 +94,6 @@ export class CreateRoutingFormResponseOutputData {
       },
     },
   })
-  @ValidateNested()
-  @Type(() => Routing)
   routing?: Routing;
 
   @IsString()

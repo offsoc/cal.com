@@ -18,8 +18,8 @@ import { DateTime } from "luxon";
 import { z } from "zod";
 
 import { getAvailableSlots } from "@calcom/platform-libraries/slots";
-import { GetSlotsInput_2024_09_04, ReserveSlotInput_2024_09_04 } from "@calcom/platform-types";
-import { Booking, EventType } from "@calcom/prisma/client";
+import { GetSlotsInput_2024_09_04, GetSlotsInputWithRouting_2024_09_04, ReserveSlotInput_2024_09_04 } from "@calcom/platform-types";
+import { EventType } from "@calcom/prisma/client";
 
 const eventTypeMetadataSchema = z
   .object({
@@ -28,7 +28,6 @@ const eventTypeMetadataSchema = z
   .nullable();
 
 const DEFAULT_RESERVATION_DURATION = 5;
-
 @Injectable()
 export class SlotsService_2024_09_04 {
   constructor(
@@ -41,13 +40,12 @@ export class SlotsService_2024_09_04 {
     private readonly teamsRepository: TeamsRepository
   ) {}
 
-  async getAvailableSlots(query: GetSlotsInput_2024_09_04) {
+  async getAvailableSlots<T extends GetSlotsInput_2024_09_04 | GetSlotsInputWithRouting_2024_09_04>(query: T) {
     try {
       const queryTransformed = await this.slotsInputService.transformGetSlotsQuery(query);
       const availableSlots: TimeSlots = await getAvailableSlots({
         input: {
           ...queryTransformed,
-          routingFormResponseId: queryTransformed.routingFormResponseId ?? undefined,
         },
         ctx: {},
       });
@@ -63,9 +61,7 @@ export class SlotsService_2024_09_04 {
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes("Invalid time range given")) {
-          throw new BadRequestException(
-            "Invalid time range given - check the 'start' and 'end' query parameters."
-          );
+          throw new BadRequestException("Invalid time range given - check the 'start' and 'end' query parameters.");
         }
       }
       throw error;

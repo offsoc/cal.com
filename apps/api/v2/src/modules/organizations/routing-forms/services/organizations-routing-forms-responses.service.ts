@@ -4,9 +4,8 @@ import { SlotsService_2024_09_04 } from "@/modules/slots/slots-2024-09-04/servic
 import { TeamsEventTypesRepository } from "@/modules/teams/event-types/teams-event-types.repository";
 import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from "@nestjs/common";
 import { Request } from "express";
-
-import { getRoutedUrl } from "@calcom/platform-libraries";
 import { ById_2024_09_04_type } from "@calcom/platform-types";
+import { getRoutedUrl } from "@calcom/platform-libraries";
 
 import type { CreateRoutingFormResponseInput } from "../inputs/create-routing-form-response.input";
 import type { CreateRoutingFormResponseOutputData } from "../outputs/create-routing-form-response.output";
@@ -92,15 +91,18 @@ export class OrganizationsRoutingFormsResponsesService {
     // Extract event type information from the routed URL
     const { eventTypeId, crmParams } = await this.extractEventTypeAndCrmParams(redirectUrl);
 
-    const paramsForGetAvailableSlots = {
-      type: ById_2024_09_04_type,
+    const paramsForGetAvailableSlotsByEventIdAndRouting  = {
       eventTypeId,
       ...slotsQuery,
       ...crmParams,
     } as const;
 
     // Get available slots using the slots service with CRM parameters
-    const slots = await this.slotsService.getAvailableSlots(paramsForGetAvailableSlots);
+    const slots = await this.slotsService.getAvailableSlots({
+      ...paramsForGetAvailableSlotsByEventIdAndRouting,
+      type: ById_2024_09_04_type,
+      withRouting: true,
+    });
     const teamMemberIds = crmParams.routedTeamMemberIds ?? [];
     const teamMemberEmail = crmParams.teamMemberEmail ?? undefined;
     const skipContactOwner = crmParams.skipContactOwner ?? undefined;
