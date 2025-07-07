@@ -18,7 +18,11 @@ import { DateTime } from "luxon";
 import { z } from "zod";
 
 import { getAvailableSlots } from "@calcom/platform-libraries/slots";
-import { GetSlotsInput_2024_09_04, GetSlotsInputWithRouting_2024_09_04, ReserveSlotInput_2024_09_04 } from "@calcom/platform-types";
+import {
+  GetSlotsInput_2024_09_04,
+  GetSlotsInputWithRouting_2024_09_04,
+  ReserveSlotInput_2024_09_04,
+} from "@calcom/platform-types";
 import { EventType } from "@calcom/prisma/client";
 
 const eventTypeMetadataSchema = z
@@ -40,7 +44,9 @@ export class SlotsService_2024_09_04 {
     private readonly teamsRepository: TeamsRepository
   ) {}
 
-  async getAvailableSlots<T extends GetSlotsInput_2024_09_04 | GetSlotsInputWithRouting_2024_09_04>(query: T) {
+  async getAvailableSlots<T extends GetSlotsInput_2024_09_04 | GetSlotsInputWithRouting_2024_09_04>(
+    query: T
+  ) {
     try {
       const queryTransformed = await this.slotsInputService.transformGetSlotsQuery(query);
       const availableSlots: TimeSlots = await getAvailableSlots({
@@ -61,7 +67,9 @@ export class SlotsService_2024_09_04 {
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes("Invalid time range given")) {
-          throw new BadRequestException("Invalid time range given - check the 'start' and 'end' query parameters.");
+          throw new BadRequestException(
+            "Invalid time range given - check the 'start' and 'end' query parameters."
+          );
         }
       }
       throw error;

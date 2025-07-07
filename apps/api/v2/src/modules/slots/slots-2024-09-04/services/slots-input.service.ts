@@ -31,7 +31,9 @@ export class SlotsInputService_2024_09_04 {
     private readonly teamsEventTypesRepository: TeamsEventTypesRepository
   ) {}
 
-  async transformGetSlotsQuery<T extends GetSlotsInput_2024_09_04 | GetSlotsInputWithRouting_2024_09_04>(query: T) {
+  async transformGetSlotsQuery<T extends GetSlotsInput_2024_09_04 | GetSlotsInputWithRouting_2024_09_04>(
+    query: T
+  ) {
     const eventType = await this.getEventType(query);
     if (!eventType) {
       throw new NotFoundException(`Event Type not found`);
@@ -43,18 +45,20 @@ export class SlotsInputService_2024_09_04 {
     const duration = query.duration;
     const eventTypeId = eventType.id;
     const eventTypeSlug = eventType.slug;
-    const timeZone = query.timeZone;
-    const rescheduleUid = query.bookingUidToReschedule || null;
-
     const usernameList = "usernames" in query ? query.usernames : [];
+    const timeZone = query.timeZone;
     const orgSlug = "organizationSlug" in query ? query.organizationSlug : null;
+    const rescheduleUid = query.bookingUidToReschedule || null;
     
-    const routingRelatedData = "withRouting" in query ? {
-      routedTeamMemberIds: query.routedTeamMemberIds || null,
-      skipContactOwner: query.skipContactOwner || false,
-      teamMemberEmail: query.teamMemberEmail || null,
-      routingFormResponseId: query.routingFormResponseId ?? undefined,
-    } : {};
+    const routingRelatedData =
+      "withRouting" in query
+        ? {
+            routedTeamMemberIds: query.routedTeamMemberIds || null,
+            skipContactOwner: query.skipContactOwner || false,
+            teamMemberEmail: query.teamMemberEmail || null,
+            routingFormResponseId: query.routingFormResponseId ?? undefined,
+          }
+        : {};
 
     return {
       isTeamEvent,

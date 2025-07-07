@@ -2,10 +2,16 @@ import { OrganizationsRoutingFormsRepository } from "@/modules/organizations/rou
 import { OrganizationsTeamsRoutingFormsResponsesOutputService } from "@/modules/organizations/teams/routing-forms/services/organizations-teams-routing-forms-responses-output.service";
 import { SlotsService_2024_09_04 } from "@/modules/slots/slots-2024-09-04/services/slots.service";
 import { TeamsEventTypesRepository } from "@/modules/teams/event-types/teams-event-types.repository";
-import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { Request } from "express";
-import { ById_2024_09_04_type } from "@calcom/platform-types";
+
 import { getRoutedUrl } from "@calcom/platform-libraries";
+import { ById_2024_09_04_type } from "@calcom/platform-types";
 
 import type { CreateRoutingFormResponseInput } from "../inputs/create-routing-form-response.input";
 import type { CreateRoutingFormResponseOutputData } from "../outputs/create-routing-form-response.output";
@@ -70,10 +76,14 @@ export class OrganizationsRoutingFormsResponsesService {
     request: Request
   ): Promise<CreateRoutingFormResponseOutputData> {
     const { queueResponse, ...slotsQuery } = query;
-    
+
     this.validateDateRange(slotsQuery.start, slotsQuery.end);
-    
-    const { redirectUrl, customMessage } = await this.getRoutingUrl(request, routingFormId, queueResponse ?? false);
+
+    const { redirectUrl, customMessage } = await this.getRoutingUrl(
+      request,
+      routingFormId,
+      queueResponse ?? false
+    );
 
     // If there is no redirect URL, then we have to show the message as that would be custom page message to be shown as per the route chosen
     if (!redirectUrl) {
@@ -85,13 +95,13 @@ export class OrganizationsRoutingFormsResponsesService {
     if (!this.isEventTypeRedirectUrl(redirectUrl)) {
       return {
         routingExternalRedirectUrl: redirectUrl.toString(),
-      }
+      };
     }
 
     // Extract event type information from the routed URL
     const { eventTypeId, crmParams } = await this.extractEventTypeAndCrmParams(redirectUrl);
 
-    const paramsForGetAvailableSlotsByEventIdAndRouting  = {
+    const paramsForGetAvailableSlotsByEventIdAndRouting = {
       eventTypeId,
       ...slotsQuery,
       ...crmParams,
@@ -125,9 +135,11 @@ export class OrganizationsRoutingFormsResponsesService {
         slots,
       };
     }
-    
+
     if (!queuedResponseId) {
-      throw new InternalServerErrorException("No routing form response ID or queued form response ID could be found.");
+      throw new InternalServerErrorException(
+        "No routing form response ID or queued form response ID could be found."
+      );
     }
 
     return {
@@ -147,7 +159,7 @@ export class OrganizationsRoutingFormsResponsesService {
   private validateDateRange(start: string, end: string) {
     const startDate = new Date(start);
     const endDate = new Date(end);
-    
+
     if (endDate < startDate) {
       throw new BadRequestException("End date cannot be before start date.");
     }
@@ -155,10 +167,13 @@ export class OrganizationsRoutingFormsResponsesService {
 
   private async getRoutingUrl(request: Request, formId: string, queueResponse: boolean) {
     const params = Object.fromEntries(new URLSearchParams(request.body));
-    const routedUrlData = await getRoutedUrl({
-      req: request,
-      query: { ...params, form: formId, ...(queueResponse && { "cal.queueFormResponse": "true" }) },
-    }, true);
+    const routedUrlData = await getRoutedUrl(
+      {
+        req: request,
+        query: { ...params, form: formId, ...(queueResponse && { "cal.queueFormResponse": "true" }) },
+      },
+      true
+    );
 
     if (routedUrlData.notFound) {
       throw new NotFoundException("Routing form not found.");
@@ -188,8 +203,6 @@ export class OrganizationsRoutingFormsResponsesService {
   }
 
   private async extractEventTypeAndCrmParams(routingUrl: URL) {
-
-
     // Extract team and event type information
     const { teamId, eventTypeSlug } = this.extractTeamIdAndEventTypeSlugFromRedirectUrl(routingUrl);
     const eventType = await this.teamsEventTypesRepository.getEventTypeByTeamIdAndSlug(teamId, eventTypeSlug);
