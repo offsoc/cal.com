@@ -3342,5 +3342,18 @@
   "restriction_schedule_not_found_error": "Restriction schedule not found",
   "converted_image_size_limit_exceed": "Image size limit exceeded, please use a smaller image preferably in JPEG format",
   "timezone_mismatch_tooltip": "You are viewing the report based on your profile timezone ({{userTimezone}}), while your browser is set to timezone ({{browserTimezone}})",
+  "single_use_link": "Single-use link (will be destroyed once used)",
+  "expires_on_date": "Expires on {{date}}",
+  "limited_uses": "Limited to {{count}} uses",
+  "single_use": "Single use",
+  "time_based_expiration": "Time-based expiration",
+  "usage_based_expiration": "Usage-based expiration",
+  "number_of_uses": "Number of uses",
+  "expires_on": "Expires on",
+  "max_usage_count": "Maximum number of uses",
+  "link_settings": "Link Settings",
+  "link_expired_on_date": "This link expired on {{date}}",
+  "usage_limit_reached": "Usage limit reached",
+  "usage_count_error": "Maximum usage count must be greater than current usage count",
   "ADD_NEW_STRINGS_ABOVE_THIS_LINE_TO_PREVENT_MERGE_CONFLICTS": "↑↑↑↑↑↑↑↑↑↑↑↑↑ Add your new strings above here ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑"
 }

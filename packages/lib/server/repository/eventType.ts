@@ -18,6 +18,17 @@ import type { UserWithLegacySelectedCalendars } from "./user";
 import { withSelectedCalendars } from "./user";
 
 const log = logger.getSubLogger({ prefix: ["repository/eventType"] });
+
+const hashedLinkSelect = {
+  select: {
+    id: true,
+    link: true,
+    expiresAt: true,
+    maxUsageCount: true,
+    usageCount: true,
+  },
+} satisfies Prisma.HashedLinkSelect;
+
 type NotSupportedProps = "locations";
 type IEventType = Ensure<
   Partial<
@@ -156,7 +167,7 @@ export class EventTypeRepository {
     const profileId = lookupTarget.type === LookupTarget.User ? null : lookupTarget.id;
     const select = {
       ...eventTypeSelect,
-      hashedLink: true,
+      hashedLink: hashedLinkSelect,
       users: { select: userSelect },
       children: {
         include: {
@@ -271,7 +282,7 @@ export class EventTypeRepository {
     const profileId = lookupTarget.type === LookupTarget.User ? null : lookupTarget.id;
     const select = {
       ...eventTypeSelect,
-      hashedLink: true,
+      hashedLink: hashedLinkSelect,
     };
 
     log.debug(
@@ -382,7 +393,7 @@ export class EventTypeRepository {
 
     const select = {
       ...eventTypeSelect,
-      hashedLink: true,
+      hashedLink: hashedLinkSelect,
       users: { select: userSelect, take: 5 },
       children: {
         include: {
@@ -525,7 +536,7 @@ export class EventTypeRepository {
       beforeEventBuffer: true,
       afterEventBuffer: true,
       slotInterval: true,
-      hashedLink: true,
+      hashedLink: hashedLinkSelect,
       eventTypeColor: true,
       bookingLimits: true,
       onlyShowFirstAvailableSlot: true,
