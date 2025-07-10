@@ -24,8 +24,16 @@ jobs:
           yarn cache clean
           rm -rf node_modules .yarn/cache .yarn/install-state.gz
 
+      - name: Increase Node memory limit
+        run: echo "NODE_OPTIONS=--max-old-space-size=4096" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Debug atoms build
+        run: |
+          cd packages/platform/atoms
+          yarn build --verbose || cat dist/* || true
 
       - name: Copy .env.example to .env
         run: cp .env.example .env
