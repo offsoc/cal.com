@@ -52,7 +52,7 @@ jobs:
           # 你可以根据实际部署需求继续添加其它变量
 
       - name: Build production
-        run: yarn build
+        run:  NODE_OPTIONS=--max-old-space-size=8192 yarn build
         
       - name: Copy API v2 .env.example to .env
         run: |
