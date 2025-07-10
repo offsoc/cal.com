@@ -42,6 +42,7 @@ jobs:
           echo "NEXT_PUBLIC_IS_E2E=1" >> .env
           echo "NODE_ENV=production" >> .env
           echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" >> .env
+          echo "CALENDSO_ENCRYPTION_KEY=$(openssl rand -base64 32)" >> .env
           echo "DATABASE_URL=postgresql://user:password@localhost:5432/calcom" >> .env
           echo "REDIS_URL=redis://localhost:6379" >> .env
           echo "API_PORT=5555" >> .env
@@ -51,7 +52,7 @@ jobs:
           # 你可以根据实际部署需求继续添加其它变量
 
       - name: Build production
-        run: NODE_OPTIONS=--max-old-space-size=8192 yarn build
+        run: yarn build
         
       - name: Copy API v2 .env.example to .env
         run: |
