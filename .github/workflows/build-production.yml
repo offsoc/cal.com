@@ -56,13 +56,13 @@ jobs:
         
       - name: Copy API v2 .env.example to .env
         run: |
-          cp apps/api/.env.example apps/api/v2/.env
+          cp apps/api/v2/.env.example apps/api/v2/.env
           # 追加企业版解除环境变量到 API v2 .env
           echo "NEXT_PUBLIC_IS_E2E=1" >> apps/api/v2/.env
           echo "NODE_ENV=production" >> apps/api/v2/.env
 
       - name: Build API v2
-        run: yarn workspace @calcom/api-v2 build 
+        run: NODE_OPTIONS=--max-old-space-size=8192 yarn workspace @calcom/api-v2 build 
 
       - name: Archive production build
         uses: actions/upload-artifact@v4
