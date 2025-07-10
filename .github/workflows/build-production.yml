@@ -1,4 +1,4 @@
-name: Build Cal.com Production 
+name: Build Cal.com Production (EE Unlocked)
 
 on:
   push:
@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: --max-old-space-size=8192
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,9 +26,6 @@ jobs:
           yarn cache clean
           rm -rf node_modules .yarn/cache .yarn/install-state.gz
 
-      - name: Increase Node memory limit
-        run: echo "NODE_OPTIONS=--max-old-space-size=4096" >> $GITHUB_ENV
-
       - name: Install dependencies
         run: yarn install --immutable
 
@@ -38,7 +37,7 @@ jobs:
       - name: Copy .env.example to .env
         run: cp .env.example .env
 
-      - name: Inject production EE  env
+      - name: Inject production EE unlock env
         run: |
           echo "NEXT_PUBLIC_IS_E2E=1" >> .env
           echo "NODE_ENV=production" >> .env
