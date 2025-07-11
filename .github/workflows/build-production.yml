@@ -1,5 +1,4 @@
-name: Build Cal.com Production (EE Unlocked)
-
+name: Build Cal.com Production 
 on:
   push:
     branches:
@@ -37,7 +36,7 @@ jobs:
       - name: Copy .env.example to .env
         run: cp .env.example .env
 
-      - name: Inject production EE unlock env
+      - name: Inject production EE  env
         run: |
           echo "NEXT_PUBLIC_IS_E2E=1" >> .env
           echo "NODE_ENV=production" >> .env
