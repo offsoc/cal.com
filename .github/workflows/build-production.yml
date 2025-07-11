@@ -83,7 +83,7 @@ jobs:
       - name: Upload zipped production build
         uses: actions/upload-artifact@v4
         with:
-          name: calcom-production-build
+          name: calcom-production-build.zip
           path: calcom-production-build.zip 
 
       
